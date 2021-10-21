@@ -27,8 +27,6 @@ function tambah($data)
         return false;
     }
 
-
-
     $query = "INSERT INTO siswa 
     VALUES(id, '$nim','$nama', '$email', '$jurusan', '$gambar')";
     mysqli_query($koneksi, $query);
@@ -37,8 +35,8 @@ function tambah($data)
 }
 
 function upload(){
-    $namafile = $_FILES['gambar']['name'];
-    $ukuranfile = $_FILES['gambar']['size'];
+    $namaFile = $_FILES['gambar']['name'];
+    $ukuranFile = $_FILES['gambar']['size'];
     $error = $_FILES['gambar']['error'];
     $tmpName = $_FILES['gambar']['tmp_name'];
 
@@ -50,7 +48,7 @@ function upload(){
     }
 
     $eksistensiGambarValid =['JPG','jpeg','png','jpg','PNG','JPEG'];
-    $eksistensiGambar = explode('.', $namafile);
+    $eksistensiGambar = explode('.', $namaFile);
     $eksistensiGambar = strtolower(end($eksistensiGambar));
     if (!in_array($eksistensiGambar,$eksistensiGambarValid)){
         echo"<script>
@@ -58,7 +56,24 @@ function upload(){
         </script>";
     }
 
+
+    if ($ukuranFile > 1000000){
+        echo"<script>
+        alert('gambar upload terlalu besar')
+            </script>
+        ";
+        return false;
+    }
+    
+    $namaFileBaru = uniqid();
+    $namaFileBaru = '.';
+    $namaFileBaru .= $eksistensiGambar;
+    
+    move_uploaded_file($tmpName, 'img/' . $namaFileBaru);
+    return $namaFileBaru;
+    
 }
+
 
 
 function hapus($id)
